@@ -34,6 +34,9 @@ module.exports = (RED) => {
                 if (msg.payload.hasOwnProperty(dataField.field)) {
                     const { type } = dataField;
                     let value = msg.payload[dataField.field];
+                    if (type === 'string') {
+                        value = String(value);
+                    }
                     if (type === 'number') {
                         value = Number(value);
                         if (Number.isNaN(value)) {
