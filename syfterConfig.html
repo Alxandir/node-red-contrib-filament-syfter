@@ -1,0 +1,28 @@
+<script type="text/javascript">
+    RED.nodes.registerType('filament-syfter-config',{
+        category: 'config',
+        defaults: {
+          name: { value:'', required: true },
+          host : { value:'http://localhost:4000', required: true },
+          apiKey : { value: '', required: true }
+        },
+        label: function() {
+          return this.name || 'Syfter Config';
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="filament-syfter-config">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="icon-bookmark"></i> Name</label>
+        <input type="text" id="node-config-input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-host"> Host</label>
+        <input type="text" id="node-config-input-host" placeholder="http://localhost:4000">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-apiKey"> API Key</label>
+        <input type="text" id="node-config-input-apiKey" placeholder="1234567ytfd">
+    </div>
+</script>

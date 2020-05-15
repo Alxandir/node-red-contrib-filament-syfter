@@ -1,0 +1,97 @@
+<script type="text/javascript">
+    RED.nodes.registerType("filament-syfter-push", {
+        category: "function",
+        color: "#E7F0FE",
+        defaults: {
+            name: { value: '' },
+            documentType: { value: '', required: true},
+            dataFields: {
+                value: [],
+                required: true
+            },
+            syfterConfig: {value: '', type:"filament-syfter-config", required: true}
+        },
+        inputs: 1,
+        outputs: 0,
+        align: "left",
+        icon: 'syfterlogo.png',
+        paletteLabel: "Syfter Push",
+        label: function () {
+            return this.name || "Syfter Push";
+        },
+        oneditprepare: function () {
+            const fieldListSetup = {
+                addItem: function (container, i, opt) {
+                    if (!opt.data) {
+                        opt.data = {
+                            name: '',
+                            field: '',
+                            type: 'string'
+                        };
+                    }
+                    var row = $('<div/>').appendTo(container);
+                    //var row2 = $('<div/>',{style:"padding-top: 5px; padding-left: 175px;"}).appendTo(container);
+                    var fieldField = $('<input/>', { class: "node-input-dataName", type: "text", style: "margin-left: 5px; width: 30%", placeholder: "Display Name" }).val(opt.data.name).appendTo(row);
+                    var valueField = $('<input/>', { class: "node-input-dataField", type: "text", style: "margin-left:5px; width: 30%", placeholder: "Payload Field" }).val(opt.data.field).appendTo(row);
+                    var typeField = $('<select class="node-input-dataTypeSelect" style="margin-left:5px; width: 30%" placeholder="Data Type"><option value="string">String</option><option value="number">Number</option><option value="datetime">Date</option></select>').val(opt.data.type).appendTo(row);
+                },
+                removeItem: function (opt) {
+                },
+                sortable: false,
+                removable: true
+            }
+            $("#node-input-documentTypeSelect").val(this.documentType);
+            $("#node-input-container").css('min-height', '350px').css('min-width', '450px').editableList(fieldListSetup);
+            for (var i = 0; i < this.dataFields.length; i++) {
+                $("#node-input-container").editableList('addItem', { data: this.dataFields[i], i: i });
+            }
+        },
+        oneditsave: function () {
+            var dataFields = $("#node-input-container").editableList('items');
+            var node = this;
+            node.dataFields = [];
+            dataFields.each(function (i) {
+                let row = $(this);
+                node.dataFields.push(generateCondition(row));
+            });
+            this.documentType = $("#node-input-documentTypeSelect").children("option:selected").val()
+
+            function generateCondition(row) {
+                return {
+                    name: row.find(".node-input-dataName").val(),
+                    field: row.find(".node-input-dataField").val(),
+                    type: row.find(".node-input-dataTypeSelect").children("option:selected").val()
+                };
+            }
+        },
+    });
+</script>
+
+<script type="text/x-red" data-template-name="filament-syfter-push">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-syfterConfig"><i class="fa fa-plug"></i> Syfter Config</label>
+        <input type="text" id="node-input-syfterConfig" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-documentTypeSelect"><i class="fa fa-cube"></i> Document Type</label>
+        <select id="node-input-documentTypeSelect" placeholder="Document Type">
+            <option value="">Select a Document Type</option>
+            <option value="companies">Companies</option>
+            <option value="articles">Articles</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label><i class="fa fa-list"></i> Data Fields</label>
+    </div>
+    <div class="form-row node-input-container-row">
+        <ol id="node-input-container"></ol>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="filament-syfter-push">
+    <p>A Syfter node for pushing custom data fields to a document. The ID of the target document should be set in the `msg._id` or `msg.payload._id` properties. The field mapping for the submitted data is defined in the node config, and any fields in this mapping that are present in the `msg.payload` will be submitted to Syfter. These fields can be strings or numbers. If a date is to be used, if not already a number, it will be converted to an epoch timestamp in millis.</p>
+</script>

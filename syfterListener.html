@@ -1,0 +1,58 @@
+<script type="text/javascript">
+  /*global RED*/
+  RED.nodes.registerType('filament-syfter-listener', {
+      category: 'input',
+      inputs: 0,
+      outputs: 1,
+      color: '#E7F0FE',
+      icon: 'syfterlogo.png',
+      paletteLabel: 'Syfter Listener',
+      defaults: {
+          syfterConfig: {
+              value: '',
+              type: 'filament-syfter-config'
+          },
+          documentType: {
+              value: '',
+              required: true
+          },
+          name: {
+              value: ''
+          }
+      },
+      label: function() {
+          return this.name || this.eventname || 'Syfter Listener';
+      },
+      oneditprepare: function() {
+        $("#node-input-documentTypeSelect").val(this.documentType);
+      },
+      oneditsave: function() {
+        this.documentType = $("#node-input-documentTypeSelect").children("option:selected").val()
+      }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="filament-syfter-listener">
+<div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+        <label for="node-input-syfterConfig"><i class="fa fa-plug"></i> Syfter Config</label>
+        <input type="text" id="node-input-syfterConfig" />
+    </div>
+  <div class="form-row">
+    <label for="node-input-documentTypeSelect"><i class="icon-tasks"></i> Document Type</label>
+    <select id="node-input-documentTypeSelect" placeholder="Document Type">
+            <option value="">Select a Document Type</option>
+            <option value="companies">Companies</option>
+            <option value="articles">Articles</option>
+        </select>
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="filament-syfter-listener">
+  <p>Syfter Listener</p>
+  <p>Connects to a Syfter server using Socket.IO Client and sets listener with the 'event name' that you specified.</p>
+  <p>The outgoing <code>msg.payload</code> will be set to the data that came from the server.</p>
+</script>
