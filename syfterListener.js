@@ -12,12 +12,12 @@ module.exports = function(RED) {
         }
         
         this.syfterConfig = RED.nodes.getNode(config.syfterConfig);
-        if (!this.syfterConfig || !this.syfterConfig.config || !this.syfterConfig.config.host || !this.syfterConfig.config.apiKey) {
+        if (!this.syfterConfig || !this.syfterConfig.config || !this.syfterConfig.config.socketHost || !this.syfterConfig.config.apiKey) {
             node.error('Invalid Syfter config');
             return;
         }
         const options = { path: '/ws', query: { 'Api-Key': this.syfterConfig.config.apiKey } }
-        this.socket = new SocketClient(this.syfterConfig.config.host, options);
+        this.socket = new SocketClient(this.syfterConfig.config.socketHost, options);
 
         this.socket.on('connect', function() {
             node.status({ fill: 'green', shape: 'dot', text: 'connected' });

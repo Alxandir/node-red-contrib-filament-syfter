@@ -3,7 +3,8 @@
         category: 'config',
         defaults: {
           name: { value:'', required: true },
-          host : { value:'http://localhost:4000', required: true },
+          host : { value:'', required: true },
+          socketHost : { value:'', required: true },
           apiKey : { value: '', required: true }
         },
         label: function() {
@@ -19,7 +20,11 @@
     </div>
     <div class="form-row">
         <label for="node-config-input-host"> Host</label>
-        <input type="text" id="node-config-input-host" placeholder="http://localhost:4000">
+        <input type="text" id="node-config-input-host" placeholder="https://app.syfter.ai">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-socketHost"> Socket Host</label>
+        <input type="text" id="node-config-input-socketHost" placeholder="https://socket.syfter.ai">
     </div>
     <div class="form-row">
         <label for="node-config-input-apiKey"> API Key</label>

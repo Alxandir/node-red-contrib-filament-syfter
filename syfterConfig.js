@@ -4,6 +4,7 @@ module.exports = (RED) => {
         RED.nodes.createNode(this,n);
         this.config = {
             host: n.host,
+            socketHost: n.socketHost,
             apiKey: n.apiKey
         };
     }
