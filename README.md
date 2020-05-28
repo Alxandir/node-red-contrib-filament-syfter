@@ -3,6 +3,8 @@ node-red-contrib-filament-syfter **(BETA)**
 
 A set of Node-RED nodes for received events from a Filament Syfter instance, and submitting custom data fields to documents.
 
+These nodes rely on access to a Filament Syfter instance. To find out more, visit: https://syfter.ai/
+
 ## Install
 
 There are multiple ways to install `node-red-contrib-filament-syfter`. The official ways are described in the Node-RED [documentation](https://nodered.org/docs/getting-started/adding-nodes).  The name of the package for installation is `node-red-contrib-filament-syfter`.
