@@ -3,9 +3,9 @@
     "version": "1.0.4",
     "description": "Filament Syfter event subscription, and custom data submission, for Node-RED",
     "main": "index.js",
-    "repository"   : {
-        "type":"git",
-        "url":"https://github.com/Alxandir/node-red-contrib-filament-syfter.git"
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Alxandir/node-red-contrib-filament-syfter.git"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"

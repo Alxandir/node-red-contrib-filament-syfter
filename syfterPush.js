@@ -29,7 +29,6 @@ module.exports = (RED) => {
             if (!host.endsWith('/')) {
                 host = `${host}/`;
             }
-            const body = {};
             for (const dataField of config.dataFields) {
                 if (msg.payload.hasOwnProperty(dataField.field)) {
                     const { type } = dataField;
@@ -50,23 +49,30 @@ module.exports = (RED) => {
                         if (Number.isNaN(value)) {
                             node.error(`Field: ${dataField.field} - Value: ${msg.payload[dataField.field]} cannot be cast to an epoch timestamp`);
                         }
+                    } else if (type === 'boolean') {
+                        value = Boolean(value);
                     }
-                    body[dataField.field] = value;
-                    body.mappings = body.mappings || {};
-                    body.mappings[dataField.field] = {
-                        field: dataField.name,
-                        type: dataField.type
+                    const idField = dataField.type === 'articles' ? 'article_id' : 'company_id';
+                    const definitionId = Number(dataField.definitionId)
+                    if (!Number.isSafeInteger(definitionId)) {
+                        node.error(`Custom Defition ID: ${dataField.definitionId} is not a valid integer ID`);
+                        continue;
+                    }
+                    const body = {
+                        custom_property_definition_id: definitionId,
+                        [idField]: id + 1,
+                        value
+                    }
+                    try {
+                        await axios.post(`${host}api/custom-property-values`, body, { headers: { Authorization: `Api-Key ${apiKey}` } })
+                    } catch(err) {
+                        if (err.response && err.response.data) {
+                            node.error(err.response.data);
+                        } else {
+                            node.error(err);
+                        }
                     }
                 }
-            }
-            if (!Object.keys(body).length) {
-                node.error('No matching payload fields found');
-                return;
-            }
-            try {
-                await axios.post(`${host}api/${this.documentType}/${id}/custom`, body, { headers: { Authorization: `Api-Key ${apiKey}` } })
-            } catch(err) {
-                node.error(err);
             }
         });
     }
