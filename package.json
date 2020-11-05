@@ -1,6 +1,6 @@
 {
     "name": "node-red-contrib-filament-syfter",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "Filament Syfter event subscription, and custom data submission, for Node-RED",
     "main": "index.js",
     "repository": {
