@@ -60,7 +60,7 @@ module.exports = (RED) => {
                     }
                     const body = {
                         custom_property_definition_id: definitionId,
-                        [idField]: id + 1,
+                        [idField]: id,
                         value
                     }
                     try {
