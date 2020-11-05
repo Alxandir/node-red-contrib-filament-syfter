@@ -19,4 +19,4 @@ This node subscribes to document events, either Companies or Articles. When a ne
 
 ## Syfter Push
 
-This node sends custom properties to documents, based on their ID. The field mapping is defined in the node config, and any fields in this mapping that are present in the `msg.payload` will be submitted to Syfter. These fields can be strings or numbers. If a date is to be used, if not already a number, it will be converted to an epoch timestamp in millis.
+This node sends custom properties to documents, based on the ID of the company/article, and the ID of the custom property definition. The field mapping is defined in the node config, and any fields in this mapping that are present in the `msg.payload` will be submitted to Syfter. These fields can be strings or numbers. If a date is to be used, if not already a number, it will be converted to an epoch timestamp in millis.
