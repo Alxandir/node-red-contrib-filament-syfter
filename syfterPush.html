@@ -24,16 +24,16 @@
                 addItem: function (container, i, opt) {
                     if (!opt.data) {
                         opt.data = {
-                            name: '',
+                            definitionId: null,
                             field: '',
                             type: 'string'
                         };
                     }
                     var row = $('<div/>').appendTo(container);
                     //var row2 = $('<div/>',{style:"padding-top: 5px; padding-left: 175px;"}).appendTo(container);
-                    var fieldField = $('<input/>', { class: "node-input-dataName", type: "text", style: "margin-left: 5px; width: 30%", placeholder: "Display Name" }).val(opt.data.name).appendTo(row);
+                    var fieldField = $('<input/>', { class: "node-input-definitionId", type: "number", style: "margin-left: 5px; width: 30%", placeholder: "Custom Definition ID" }).val(opt.data.definitionId).appendTo(row);
                     var valueField = $('<input/>', { class: "node-input-dataField", type: "text", style: "margin-left:5px; width: 30%", placeholder: "Payload Field" }).val(opt.data.field).appendTo(row);
-                    var typeField = $('<select class="node-input-dataTypeSelect" style="margin-left:5px; width: 30%" placeholder="Data Type"><option value="string">String</option><option value="number">Number</option><option value="datetime">Date</option></select>').val(opt.data.type).appendTo(row);
+                    var typeField = $('<select class="node-input-dataTypeSelect" style="margin-left:5px; width: 30%" placeholder="Data Type"><option value="string">String</option><option value="number">Number</option><option value="datetime">Date</option><option value="boolean">Boolean</option></select>').val(opt.data.type).appendTo(row);
                 },
                 removeItem: function (opt) {
                 },
@@ -58,7 +58,7 @@
 
             function generateCondition(row) {
                 return {
-                    name: row.find(".node-input-dataName").val(),
+                    definitionId: row.find(".node-input-definitionId").val(),
                     field: row.find(".node-input-dataField").val(),
                     type: row.find(".node-input-dataTypeSelect").children("option:selected").val()
                 };
@@ -93,5 +93,5 @@
 </script>
 
 <script type="text/x-red" data-help-name="filament-syfter-push">
-    <p>A Syfter node for pushing custom data fields to a document. The ID of the target document should be set in the `msg._id` or `msg.payload._id` properties. The field mapping for the submitted data is defined in the node config, and any fields in this mapping that are present in the `msg.payload` will be submitted to Syfter. These fields can be strings or numbers. If a date is to be used, if not already a number, it will be converted to an epoch timestamp in millis.</p>
+    <p>A Syfter node for pushing custom data fields to a document. The ID of the target document should be set in the `msg._id` or `msg.payload._id` properties. The field mapping for the submitted data is defined in the node config, and any fields in this mapping that are present in the `msg.payload` will be submitted to Syfter. These fields can be strings or numbers. If a date is to be used, if not already a number, it will be converted to an epoch timestamp in millis. To submit a custom property value to a copany/article, the custom property definition must already exist, and the ID provided in the node properties.</p>
 </script>
