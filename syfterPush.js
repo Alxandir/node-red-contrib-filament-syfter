@@ -40,6 +40,7 @@ module.exports = (RED) => {
                         value = Number(value);
                         if (Number.isNaN(value)) {
                             node.error(`Field: ${dataField.field} - Value: ${msg.payload[dataField.field]} cannot be cast to a Number`);
+                            continue;
                         }
                     } else if (type === 'datetime') {
                         if (value instanceof Date) {
@@ -48,6 +49,7 @@ module.exports = (RED) => {
                         value = Number(value);
                         if (Number.isNaN(value)) {
                             node.error(`Field: ${dataField.field} - Value: ${msg.payload[dataField.field]} cannot be cast to an epoch timestamp`);
+                            continue;
                         }
                     } else if (type === 'boolean') {
                         value = Boolean(value);
