@@ -54,7 +54,7 @@ module.exports = (RED) => {
                     } else if (type === 'boolean') {
                         value = Boolean(value);
                     }
-                    const idField = dataField.type === 'articles' ? 'article_id' : 'company_id';
+                    const idField = config.documentType === 'articles' ? 'article_id' : 'company_id';
                     const definitionId = Number(dataField.definitionId)
                     if (!Number.isSafeInteger(definitionId)) {
                         node.error(`Custom Defition ID: ${dataField.definitionId} is not a valid integer ID`);
