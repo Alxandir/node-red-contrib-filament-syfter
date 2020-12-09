@@ -4,6 +4,7 @@
         color: "#E7F0FE",
         defaults: {
             name: { value: '' },
+            dataSource: { value: '' },
             documentType: { value: '', required: true},
             dataFields: {
                 value: [],
@@ -85,6 +86,10 @@
         </select>
     </div>
     <div class="form-row">
+        <label for="node-input-dataSource"><i class="fa fa-tag"></i> Source</label>
+        <input type="text" id="node-input-dataSource" placeholder="Eg. ml">
+    </div>
+    <div class="form-row">
         <label><i class="fa fa-list"></i> Data Fields</label>
     </div>
     <div class="form-row node-input-container-row">
@@ -93,5 +98,22 @@
 </script>
 
 <script type="text/x-red" data-help-name="filament-syfter-push">
-    <p>A Syfter node for pushing custom data fields to a document. The ID of the target document should be set in the `msg._id` or `msg.payload._id` properties. The field mapping for the submitted data is defined in the node config, and any fields in this mapping that are present in the `msg.payload` will be submitted to Syfter. These fields can be strings or numbers. If a date is to be used, if not already a number, it will be converted to an epoch timestamp in millis. To submit a custom property value to a copany/article, the custom property definition must already exist, and the ID provided in the node properties.</p>
+    <p>A Syfter node for pushing custom data fields to a document.
+    The ID of the target document should be set in the <code>msg._id</code> or <code>msg.payload._id</code> properties.
+    The field mapping for the submitted data is defined in the node config, and any fields in this mapping that are present in the <code>msg.payload</code> will be submitted to Syfter.
+    These fields can be strings or numbers. If a date is to be used, if not already a number, it will be converted to an epoch timestamp in millis.
+    To submit a custom property value to a company/article, the custom property definition must already exist, and the ID provided in the node properties.
+    A source should be set to describe what triggered this value to be added to the custom property of a company/article. By default this will be `ml`, and any value set will be converted to snake_case.
+    </p>
+    <p>
+    When submitting values in given fields of the <code>msg.payload</code>, it is also possible to provide metadata to be associated with that value, such as a <code>ml_file_id</code> (Integer), <code>page_number</code> (Integer) or <code>confidence</code> (0 - 1).
+    To do this, rather than having the value of your field be the actual raw data, it should be an object, with a <code>value</code> field, and a <code>metadata</code> field. For example, for the payload field of <code>myField</code>:
+    <pre>
+msg.payload.myField = {
+    value: 'TheValue',
+    metadata: {
+        confidence: 0.5
+    }
+}</pre>
+    </p>
 </script>

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { snakeCase } = require('change-case');
 
 module.exports = (RED) => {
     function FilamentSyfterPush(config) {
@@ -33,6 +34,45 @@ module.exports = (RED) => {
                 if (msg.payload.hasOwnProperty(dataField.field)) {
                     const { type } = dataField;
                     let value = msg.payload[dataField.field];
+                    let metadata;
+                    if (value !== null && typeof value === 'object') {
+                        if (!value.hasOwnProperty('value')) {
+                            node.error(`Field: ${dataField.field} - value object does not contain a 'value' field`);
+                            continue;
+                        }
+                        metadata = value.metadata;
+                        value = value.value;
+                        if (metadata) {
+                            if (typeof metadata !== 'object') {
+                                node.error(`Field: ${dataField.field} - Metadata: ${metadata} is not a valid object`);
+                                continue;
+                            }
+                            if (metadata.ml_file_id) {
+                                const ml_file_id = Number(metadata.ml_file_id);
+                                if (!Number.isSafeInteger(ml_file_id) || ml_file_id < 0) {
+                                    node.error(`Field: ${dataField.field} - Metadata ML file ID: ${ml_file_id} is not a valid integer ID`);
+                                    continue;
+                                }
+                                metadata.ml_file_id = ml_file_id;
+                            }
+                            if (metadata.confidence) {
+                                const confidence = Number(metadata.confidence);
+                                if (Number.isNaN(confidence) || confidence > 1 || confidence < 0) {
+                                    node.error(`Field: ${dataField.field} - Metadata confidence: ${confidence} is not a valid number (0 - 1) eg. 0.75`);
+                                    continue;
+                                }
+                                metadata.confidence = confidence;
+                            }
+                            if (metadata.page_number) {
+                                const page_number = Number(metadata.page_number);
+                                if (!Number.isSafeInteger(page_number) || page_number < 0) {
+                                    node.error(`Field: ${dataField.field} - Metadata page number: ${page_number} is not a valid integer`);
+                                    continue;
+                                }
+                                metadata.page_number = page_number;
+                            }
+                        }
+                    }
                     if (type === 'string') {
                         value = String(value);
                     }
@@ -55,6 +95,7 @@ module.exports = (RED) => {
                         value = Boolean(value);
                     }
                     const idField = config.documentType === 'articles' ? 'article_id' : 'company_id';
+                    const source = snakeCase(config.dataSource || 'ml');
                     const definitionId = Number(dataField.definitionId)
                     if (!Number.isSafeInteger(definitionId)) {
                         node.error(`Custom Defition ID: ${dataField.definitionId} is not a valid integer ID`);
@@ -63,11 +104,15 @@ module.exports = (RED) => {
                     const body = {
                         custom_property_definition_id: definitionId,
                         [idField]: id,
-                        value
+                        value,
+                        source
+                    }
+                    if (metadata) {
+                        body.metadata = metadata;
                     }
                     try {
                         await axios.post(`${host}api/custom-property-values`, body, { headers: { Authorization: `Api-Key ${apiKey}` } })
-                    } catch(err) {
+                    } catch (err) {
                         if (err.response && err.response.data) {
                             node.error(err.response.data);
                         } else {
